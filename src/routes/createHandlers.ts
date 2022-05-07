@@ -31,6 +31,7 @@ export function createHandlers() {
       id,
       numberOfPages: 100,
       title: "Some title",
+      authorName: "fakeName",
     };
 
     res.status(StatusCodes.OK).json(bookDTO);

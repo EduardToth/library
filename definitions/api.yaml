@@ -56,6 +56,7 @@ paths:
           description: "Bad request"
         "5XX":
           description: Unexpected error
+
   /book/{id}:
     get:
       operationId: getBook
@@ -140,9 +141,12 @@ components:
           type: string
         numberOfPages:
           type: number
+        authorName:
+          type: string
       required:
         - title
         - numberOfPages
+        - authorName
 
     Book:
       allOf:

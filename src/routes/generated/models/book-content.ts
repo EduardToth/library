@@ -32,5 +32,11 @@ export interface BookContent {
      * @memberof BookContent
      */
     'numberOfPages': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof BookContent
+     */
+    'authorName': string;
 }
 
