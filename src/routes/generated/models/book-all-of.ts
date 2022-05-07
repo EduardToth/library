@@ -13,13 +13,18 @@
  */
 
 
-import { BookAllOf } from './book-all-of';
-import { BookContent } from './book-content';
 
 /**
- * @type Book
+ * 
  * @export
+ * @interface BookAllOf
  */
-export type Book = BookAllOf & BookContent;
-
+export interface BookAllOf {
+    /**
+     * 
+     * @type {string}
+     * @memberof BookAllOf
+     */
+    'id': string;
+}
 

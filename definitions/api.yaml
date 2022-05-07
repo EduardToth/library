@@ -1,13 +1,11 @@
-openapi: "3.0.2"
+openapi: "3.0.0"
 info:
   version: 1.0.0
-  title: JSON Placeholder API
-  description: See https://jsonplaceholder.typicode.com/
+  title: LibraryAPI
 paths:
   /:
     get:
       description: Returns "Hello world"
-      tags: ["Posts"]
       operationId: "getHelloWorldMessage"
       responses:
         "200":
@@ -18,6 +16,104 @@ paths:
                 type: string
         "404":
           description: Cannot access server
+        "5XX":
+          description: Unexpected Error
+
+  /book:
+    get:
+      operationId: getAllBooks
+      description: it retrieves all book from the database
+      responses:
+        "200":
+          description: "OK"
+          content:
+            "application/json":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Book"
+        "404":
+          description: books could not be accessed
+        "5XX":
+          description: Unexpected error
+    post:
+      operationId: "createBook"
+      description: This endpoint creates a new book in the database
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/BookContent"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Book"
+        "400":
+          description: "Bad request"
+        "5XX":
+          description: Unexpected error
+  /book/{id}:
+    get:
+      operationId: getBook
+      description: Gets a book after a given id
+      parameters:
+        - name: id
+          description: id of a book
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Book found"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Book"
+        "404":
+          description: Book not found
+        "5XX":
+          description: Unexpected Error
+    delete:
+      operationId: deleteBook
+      description: This will delete a book after its id
+      parameters:
+        - name: id
+          description: id of a book
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        204:
+          description: no content
+        404:
+          description: not found
+    put:
+      operationId: updateBook
+      description: This endpoint will update a book entity
+      parameters:
+        - name: id
+          description: id of a book
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/BookContent"
+      responses:
+        "200":
+          description: Book resource updated
+        "409":
+          description: Conflict
 
 components:
   schemas:
@@ -37,19 +133,26 @@ components:
         - name
         - booksWritten
 
-    Book:
+    BookContent:
       type: object
       properties:
-        id:
-          type: string
         title:
           type: string
         numberOfPages:
-          type: integer
+          type: number
       required:
-        - id
         - title
         - numberOfPages
+
+    Book:
+      allOf:
+        - $ref: "#/components/schemas/BookContent"
+        - type: object
+          properties:
+            id:
+              type: string
+          required:
+            - id
 
     BookShelf:
       type: object
