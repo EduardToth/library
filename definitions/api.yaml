@@ -1,0 +1,75 @@
+openapi: "3.0.2"
+info:
+  version: 1.0.0
+  title: JSON Placeholder API
+  description: See https://jsonplaceholder.typicode.com/
+paths:
+  /:
+    get:
+      description: Returns "Hello world"
+      tags: ["Posts"]
+      operationId: "getHelloWorldMessage"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            "application/json":
+              schema:
+                type: string
+        "404":
+          description: Cannot access server
+
+components:
+  schemas:
+    Author:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        booksWritten:
+          type: array
+          items:
+            $ref: "#/components/schemas/Book"
+      required:
+        - id
+        - name
+        - booksWritten
+
+    Book:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        numberOfPages:
+          type: integer
+      required:
+        - id
+        - title
+        - numberOfPages
+
+    BookShelf:
+      type: object
+      properties:
+        id:
+          type: string
+        books:
+          type: array
+          items:
+            $ref: "#/components/schemas/Book"
+      required:
+        - id
+        - books
+
+    Library:
+      type: object
+      properties:
+        name:
+          type: string
+        bookShelves:
+          type: array
+          items:
+            $ref: "#/components/schemas/BookShelf"

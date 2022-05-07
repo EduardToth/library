@@ -1,0 +1,24 @@
+{
+  "$schema": "./node_modules/@openapitools/openapi-generator-cli/config.schema.json",
+  "spaces": 2,
+  "generator-cli": {
+    "version": "5.4.0",
+    "generators": {
+      "DTOs": {
+        "generatorName": "typescript-axios",
+        "output": "./src/routes/generated",
+        "glob": "./definitions/api.yaml",
+        "globalProperty": { "supportingFiles": "index.ts", "models": "" },
+        "ignoreFileOverride": "./src/routes/.openapi-generator-ignore",
+        "modelPackage": "models",
+        "apiPackage": "apis",
+        "additionalProperties": {
+          "supportsES6": "true",
+          "enumPropertyNaming": "original",
+          "withSeparateModelsAndApi": "true",
+          "modelPropertyNaming": "original"
+        }
+      }
+    }
+  }
+}
