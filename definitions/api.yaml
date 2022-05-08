@@ -116,8 +116,41 @@ paths:
         "409":
           description: Conflict
 
+  # create the corresponding endpoints for getAllAuthors, modifyAuthor, getAuthor, deleteAuthor
+  /author:
+    post:
+      operationId: "createAuthor"
+      description: This endpoint will create a new author entity
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/AuthorContent"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Author"
+        "400":
+          description: "Bad request"
+        "5XX":
+          description: Unexpected error
+
+  # create the corresponding endpoints for getBookShelf, getAllBookShelves, modifyBookShelf, deleteBookShelf, createBookShelf
+  # create the corresponding endpoints for createLibrary, getAllLibraries, getLibrary, modifyLibrary, deleteLibrary
 components:
   schemas:
+    AuthorContent:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
+
     Author:
       type: object
       properties:
@@ -143,10 +176,13 @@ components:
           type: number
         authorName:
           type: string
+        authorId:
+          type: string
       required:
         - title
         - numberOfPages
         - authorName
+        - authorId
 
     Book:
       allOf:

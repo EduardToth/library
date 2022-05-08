@@ -17,32 +17,14 @@
 /**
  * 
  * @export
- * @interface BookContent
+ * @interface AuthorContent
  */
-export interface BookContent {
+export interface AuthorContent {
     /**
      * 
      * @type {string}
-     * @memberof BookContent
+     * @memberof AuthorContent
      */
-    'title': string;
-    /**
-     * 
-     * @type {number}
-     * @memberof BookContent
-     */
-    'numberOfPages': number;
-    /**
-     * 
-     * @type {string}
-     * @memberof BookContent
-     */
-    'authorName': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof BookContent
-     */
-    'authorId': string;
+    'name': string;
 }
 
