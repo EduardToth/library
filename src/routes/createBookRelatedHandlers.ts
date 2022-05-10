@@ -30,6 +30,7 @@ export function createBookRelatedHandlers() {
       title: "Some title",
       authorName: "fakeName",
       authorId: v4(),
+      bookShelfId: v4(),
     };
 
     res.status(StatusCodes.OK).json(bookDTO);

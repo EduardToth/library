@@ -44,5 +44,11 @@ export interface BookContent {
      * @memberof BookContent
      */
     'authorId': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BookContent
+     */
+    'bookShelfId': string;
 }
 

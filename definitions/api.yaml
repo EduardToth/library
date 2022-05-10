@@ -177,11 +177,14 @@ components:
           type: string
         authorId:
           type: string
+        bookShelfId:
+          type: string
       required:
         - title
         - numberOfPages
         - authorName
         - authorId
+        - bookShelfId
 
     Book:
       allOf:
