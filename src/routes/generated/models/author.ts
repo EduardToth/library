@@ -13,31 +13,14 @@
  */
 
 
+import { AuthorAllOf } from './author-all-of';
+import { AuthorContent } from './author-content';
 import { Book } from './book';
 
 /**
- * 
+ * @type Author
  * @export
- * @interface Author
  */
-export interface Author {
-    /**
-     * 
-     * @type {string}
-     * @memberof Author
-     */
-    'id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Author
-     */
-    'name': string;
-    /**
-     * 
-     * @type {Array<Book>}
-     * @memberof Author
-     */
-    'booksWritten': Array<Book>;
-}
+export type Author = AuthorAllOf & AuthorContent;
+
 

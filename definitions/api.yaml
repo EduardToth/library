@@ -140,7 +140,7 @@ paths:
           description: Unexpected error
 
   # create the corresponding endpoints for getBookShelf, getAllBookShelves, modifyBookShelf, deleteBookShelf, createBookShelf
-  # create the corresponding endpoints for createLibrary, getAllLibraries, getLibrary, modifyLibrary, deleteLibrary
+  # create the corresponding endpoints for createLibrary, getAllLibraries, getLibrary, modifyLibrary, deleteLibrary, addBookShelfToLibray, addBookShelvesToLibrary
 components:
   schemas:
     AuthorContent:
@@ -148,24 +148,23 @@ components:
       properties:
         name:
           type: string
-      required:
-        - name
-
-    Author:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
         booksWritten:
           type: array
           items:
             $ref: "#/components/schemas/Book"
       required:
-        - id
         - name
         - booksWritten
+
+    Author:
+      allOf:
+        - $ref: "#/components/schemas/AuthorContent"
+        - type: object
+          properties:
+            id:
+              type: string
+          required:
+            - id
 
     BookContent:
       type: object
@@ -194,25 +193,44 @@ components:
           required:
             - id
 
-    BookShelf:
+    BookShelfContent:
       type: object
       properties:
-        id:
-          type: string
         books:
           type: array
           items:
             $ref: "#/components/schemas/Book"
+        libraryId:
+          type: string
+        libraryName:
+          type: string
       required:
-        - id
         - books
+        - libraryId
+        - libraryName
+
+    BookShelf:
+      allOf:
+        - $ref: "#/components/schemas/BookShelfContent"
+        - type: object
+          properties:
+            id:
+              type: string
+          required:
+            - id
 
     Library:
       type: object
       properties:
+        id:
+          type: string
         name:
           type: string
         bookShelves:
           type: array
           items:
             $ref: "#/components/schemas/BookShelf"
+      required:
+        - id
+        - name
+        - bookShelves

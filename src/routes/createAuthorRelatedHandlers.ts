@@ -8,7 +8,7 @@ import { StatusCodes } from "http-status-codes";
 export function createAuthorRelatedHandlers() {
   async function createAuthor(context: Context, res: Response) {
     const authorContent = context.request.requestBody as AuthorContentDTO;
-    const author: Author = { id: v4(), booksWritten: [], ...authorContent };
+    const author: Author = { id: v4(), ...authorContent };
 
     res.status(StatusCodes.CREATED).json(author);
   }

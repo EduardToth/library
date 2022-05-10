@@ -26,12 +26,18 @@ export interface Library {
      * @type {string}
      * @memberof Library
      */
-    'name'?: string;
+    'id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Library
+     */
+    'name': string;
     /**
      * 
      * @type {Array<BookShelf>}
      * @memberof Library
      */
-    'bookShelves'?: Array<BookShelf>;
+    'bookShelves': Array<BookShelf>;
 }
 

@@ -18,20 +18,26 @@ import { Book } from './book';
 /**
  * 
  * @export
- * @interface AuthorContent
+ * @interface BookShelfContent
  */
-export interface AuthorContent {
-    /**
-     * 
-     * @type {string}
-     * @memberof AuthorContent
-     */
-    'name': string;
+export interface BookShelfContent {
     /**
      * 
      * @type {Array<Book>}
-     * @memberof AuthorContent
+     * @memberof BookShelfContent
      */
-    'booksWritten': Array<Book>;
+    'books': Array<Book>;
+    /**
+     * 
+     * @type {string}
+     * @memberof BookShelfContent
+     */
+    'libraryId': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BookShelfContent
+     */
+    'libraryName': string;
 }
 
