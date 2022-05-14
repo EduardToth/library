@@ -14,13 +14,30 @@
 
 
 import { BookShelf } from './book-shelf';
-import { LibraryAllOf } from './library-all-of';
-import { LibraryContent } from './library-content';
 
 /**
- * @type Library
+ * 
  * @export
+ * @interface LibraryAllOf
  */
-export type Library = LibraryAllOf & LibraryContent;
-
+export interface LibraryAllOf {
+    /**
+     * 
+     * @type {string}
+     * @memberof LibraryAllOf
+     */
+    'id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof LibraryAllOf
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {Array<BookShelf>}
+     * @memberof LibraryAllOf
+     */
+    'bookShelves': Array<BookShelf>;
+}
 

@@ -4,5 +4,4 @@ export interface BookShelf {
   id: string;
   books: Book[];
   libraryId: string;
-  libraryName: string;
 }

@@ -13,14 +13,18 @@
  */
 
 
-import { BookShelf } from './book-shelf';
-import { LibraryAllOf } from './library-all-of';
-import { LibraryContent } from './library-content';
 
 /**
- * @type Library
+ * 
  * @export
+ * @interface LibraryContent
  */
-export type Library = LibraryAllOf & LibraryContent;
-
+export interface LibraryContent {
+    /**
+     * 
+     * @type {string}
+     * @memberof LibraryContent
+     */
+    'name': string;
+}
 

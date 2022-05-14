@@ -155,13 +155,8 @@ components:
       properties:
         name:
           type: string
-        booksWritten:
-          type: array
-          items:
-            $ref: "#/components/schemas/Book"
       required:
         - name
-        - booksWritten
 
     Author:
       allOf:
@@ -170,8 +165,13 @@ components:
           properties:
             id:
               type: string
+            booksWritten:
+              type: array
+              items:
+                $ref: "#/components/schemas/Book"
           required:
             - id
+            - booksWritten
 
     BookContent:
       type: object
@@ -180,15 +180,15 @@ components:
           type: string
         numberOfPages:
           type: number
-        authorName:
-          type: string
         authorId:
+          type: string
+        bookShelfId:
           type: string
       required:
         - title
         - numberOfPages
-        - authorName
         - authorId
+        - bookShelfId
 
     Book:
       allOf:
@@ -203,18 +203,10 @@ components:
     BookShelfContent:
       type: object
       properties:
-        books:
-          type: array
-          items:
-            $ref: "#/components/schemas/Book"
         libraryId:
           type: string
-        libraryName:
-          type: string
       required:
-        - books
         - libraryId
-        - libraryName
 
     BookShelf:
       allOf:
@@ -223,21 +215,35 @@ components:
           properties:
             id:
               type: string
+            books:
+              type: array
+              items:
+                $ref: "#/components/schemas/Book"
           required:
             - id
+            - books
 
-    Library:
+    LibraryContent:
       type: object
       properties:
-        id:
-          type: string
         name:
           type: string
-        bookShelves:
-          type: array
-          items:
-            $ref: "#/components/schemas/BookShelf"
       required:
-        - id
         - name
-        - bookShelves
+
+    Library:
+      allOf:
+        - $ref: "#/components/schemas/LibraryContent"
+        - type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            bookShelves:
+              type: array
+              items:
+                $ref: "#/components/schemas/BookShelf"
+          required:
+            - id
+            - bookShelves

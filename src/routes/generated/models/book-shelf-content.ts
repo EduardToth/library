@@ -13,7 +13,6 @@
  */
 
 
-import { Book } from './book';
 
 /**
  * 
@@ -23,21 +22,9 @@ import { Book } from './book';
 export interface BookShelfContent {
     /**
      * 
-     * @type {Array<Book>}
-     * @memberof BookShelfContent
-     */
-    'books': Array<Book>;
-    /**
-     * 
      * @type {string}
      * @memberof BookShelfContent
      */
     'libraryId': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof BookShelfContent
-     */
-    'libraryName': string;
 }
 

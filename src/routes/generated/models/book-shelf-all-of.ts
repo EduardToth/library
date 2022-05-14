@@ -13,14 +13,25 @@
  */
 
 
-import { BookShelf } from './book-shelf';
-import { LibraryAllOf } from './library-all-of';
-import { LibraryContent } from './library-content';
+import { Book } from './book';
 
 /**
- * @type Library
+ * 
  * @export
+ * @interface BookShelfAllOf
  */
-export type Library = LibraryAllOf & LibraryContent;
-
+export interface BookShelfAllOf {
+    /**
+     * 
+     * @type {string}
+     * @memberof BookShelfAllOf
+     */
+    'id': string;
+    /**
+     * 
+     * @type {Array<Book>}
+     * @memberof BookShelfAllOf
+     */
+    'books': Array<Book>;
+}
 

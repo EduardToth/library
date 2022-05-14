@@ -13,14 +13,14 @@
  */
 
 
-import { AuthorAllOf } from './author-all-of';
 import { Book } from './book';
+import { BookShelfAllOf } from './book-shelf-all-of';
 import { BookShelfContent } from './book-shelf-content';
 
 /**
  * @type BookShelf
  * @export
  */
-export type BookShelf = AuthorAllOf & BookShelfContent;
+export type BookShelf = BookShelfAllOf & BookShelfContent;
 
 
