@@ -11,8 +11,8 @@ export function createBookRelatedHandlers() {
     const { authorId } = bookContentDTO;
     // TODO does author exists
     const book: Book = {
-      id: v4(),
       ...bookContentDTO,
+      id: v4(),
     };
 
     res.status(StatusCodes.CREATED).json(book);
@@ -30,7 +30,6 @@ export function createBookRelatedHandlers() {
       title: "Some title",
       authorName: "fakeName",
       authorId: v4(),
-      bookShelfId: v4(),
     };
 
     res.status(StatusCodes.OK).json(bookDTO);
@@ -46,8 +45,8 @@ export function createBookRelatedHandlers() {
     const id = context.request.params.id as string;
     const bookContentDTO = context.request.requestBody as BookContentDTO;
     const resultingBook: BookDTO = {
-      id,
       ...bookContentDTO,
+      id,
     };
 
     res.status(StatusCodes.OK).json(resultingBook);

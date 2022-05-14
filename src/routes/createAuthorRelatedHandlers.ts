@@ -16,5 +16,6 @@ export function createAuthorRelatedHandlers() {
 
     res.status(StatusCodes.CREATED).json(author);
   }
+
   return { createAuthor };
 }

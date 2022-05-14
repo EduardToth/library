@@ -5,7 +5,7 @@ info:
 paths:
   /:
     get:
-      description: Returns "Hello world"
+      description: This endpoint returns "Hello world"
       operationId: "getHelloWorldMessage"
       responses:
         "200":
@@ -15,14 +15,14 @@ paths:
               schema:
                 type: string
         "404":
-          description: Cannot access server
+          description: "'Hello world' text not found"
         "5XX":
           description: Unexpected Error
 
   /book:
     get:
       operationId: getAllBooks
-      description: it retrieves all books from the database
+      description: This endpoint retrieves all books from the database
       responses:
         "200":
           description: "OK"
@@ -33,7 +33,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/Book"
         "404":
-          description: books could not be accessed
+          description: Not Found
         "5XX":
           description: Unexpected error
     post:
@@ -60,7 +60,7 @@ paths:
   /book/{id}:
     get:
       operationId: getBook
-      description: Gets a book after a given id
+      description: this endpoint gets a book after a given id
       parameters:
         - name: id
           description: id of a book
@@ -70,18 +70,18 @@ paths:
             type: string
       responses:
         "200":
-          description: "Book found"
+          description: "OK"
           content:
             "application/json":
               schema:
                 $ref: "#/components/schemas/Book"
         "404":
-          description: Book not found
+          description: Not Found
         "5XX":
           description: Unexpected Error
     delete:
       operationId: deleteBook
-      description: This will delete a book after its id
+      description: This endpoint will delete a book after its id
       parameters:
         - name: id
           description: id of a book
@@ -91,9 +91,11 @@ paths:
             type: string
       responses:
         204:
-          description: no content
+          description: No Content
         404:
-          description: not found
+          description: No Found
+        "5XX":
+          description: Unexpected Error
     put:
       operationId: updateBook
       description: This endpoint will update a book entity
@@ -112,14 +114,19 @@ paths:
               $ref: "#/components/schemas/BookContent"
       responses:
         "200":
-          description: Book resource updated
+          description: "OK"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Book"
+
         "409":
           description: Conflict
 
   # create the corresponding endpoints for getAllAuthors, modifyAuthor, getAuthor, deleteAuthor
   /author:
     post:
-      operationId: "createAuthor"
+      operationId: createAuthor
       description: This endpoint will create a new author entity
       requestBody:
         required: true
@@ -177,14 +184,11 @@ components:
           type: string
         authorId:
           type: string
-        bookShelfId:
-          type: string
       required:
         - title
         - numberOfPages
         - authorName
         - authorId
-        - bookShelfId
 
     Book:
       allOf:
