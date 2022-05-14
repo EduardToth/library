@@ -22,7 +22,7 @@ paths:
   /book:
     get:
       operationId: getAllBooks
-      description: it retrieves all book from the database
+      description: it retrieves all books from the database
       responses:
         "200":
           description: "OK"
