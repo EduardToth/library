@@ -11,7 +11,7 @@ export function createAuthorRelatedHandlers() {
     const author: Author = {
       id: v4(),
       name: authorContent.name,
-      booksWritten: authorContent.booksWritten,
+      booksWritten: [],
     };
 
     res.status(StatusCodes.CREATED).json(author);

@@ -8,8 +8,9 @@ import { Book } from "../domain";
 export function createBookRelatedHandlers() {
   async function createBook(context: Context, res: Response) {
     const bookContentDTO = context.request.requestBody as BookContentDTO;
-    const { authorId } = bookContentDTO;
-    // TODO does author exists
+    const { authorId, bookShelfId } = bookContentDTO;
+    // check that the author and the booksShelf exist
+    // add book to the author entity and the bookShelf entity
     const book: Book = {
       ...bookContentDTO,
       id: v4(),
@@ -28,7 +29,7 @@ export function createBookRelatedHandlers() {
       id,
       numberOfPages: 100,
       title: "Some title",
-      authorName: "fakeName",
+      bookShelfId: v4(),
       authorId: v4(),
     };
 
@@ -37,13 +38,15 @@ export function createBookRelatedHandlers() {
 
   async function deleteBook(context: Context, res: Response) {
     const id = context.request.params.id as string;
-    // delete the reference to the book entity from the corresponding author field
+    // delete the reference to the book entity from the corresponding author entity
+    // delete the reference to the book entity from the corresponding bookshelf entity
     res.status(StatusCodes.NO_CONTENT).send();
   }
 
   async function updateBook(context: Context, res: Response) {
     const id = context.request.params.id as string;
     const bookContentDTO = context.request.requestBody as BookContentDTO;
+    // move references to the book from the author and bookshelf entities if it is the case
     const resultingBook: BookDTO = {
       ...bookContentDTO,
       id,
