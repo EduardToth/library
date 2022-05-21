@@ -37,12 +37,12 @@ export interface BookContent {
      * @type {string}
      * @memberof BookContent
      */
-    'authorName': string;
+    'authorId': string;
     /**
      * 
      * @type {string}
      * @memberof BookContent
      */
-    'authorId': string;
+    'bookShelfId': string;
 }
 

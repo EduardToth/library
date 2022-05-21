@@ -13,6 +13,7 @@
  */
 
 
+import { Book } from './book';
 
 /**
  * 
@@ -26,5 +27,11 @@ export interface AuthorAllOf {
      * @memberof AuthorAllOf
      */
     'id': string;
+    /**
+     * 
+     * @type {Array<Book>}
+     * @memberof AuthorAllOf
+     */
+    'booksWritten': Array<Book>;
 }
 

@@ -8,23 +8,23 @@ paths:
       description: Returns "Hello world"
       operationId: "getHelloWorldMessage"
       responses:
-        "200":
-          description: Successful response
+        200:
+          description: "OK"
           content:
             "application/json":
               schema:
                 type: string
-        "404":
-          description: Cannot access server
+        404:
+          description: "Message not found"
         "5XX":
           description: Unexpected Error
 
   /book:
     get:
       operationId: getAllBooks
-      description: it retrieves all book from the database
+      description: it retrieves all books from the database
       responses:
-        "200":
+        200:
           description: "OK"
           content:
             "application/json":
@@ -32,7 +32,7 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Book"
-        "404":
+        404:
           description: books could not be accessed
         "5XX":
           description: Unexpected error
@@ -46,13 +46,13 @@ paths:
             schema:
               $ref: "#/components/schemas/BookContent"
       responses:
-        "201":
+        201:
           description: "Created"
           content:
             "application/json":
               schema:
                 $ref: "#/components/schemas/Book"
-        "400":
+        400:
           description: "Bad request"
         "5XX":
           description: Unexpected error
@@ -69,13 +69,13 @@ paths:
           schema:
             type: string
       responses:
-        "200":
-          description: "Book found"
+        200:
+          description: "OK"
           content:
             "application/json":
               schema:
                 $ref: "#/components/schemas/Book"
-        "404":
+        404:
           description: Book not found
         "5XX":
           description: Unexpected Error
@@ -111,15 +111,20 @@ paths:
             schema:
               $ref: "#/components/schemas/BookContent"
       responses:
-        "200":
+        200:
           description: Book resource updated
-        "409":
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Book"
+        409:
           description: Conflict
+        "5XX":
+          description: Unexpected error occured
 
-  # create the corresponding endpoints for getAllAuthors, modifyAuthor, getAuthor, deleteAuthor
   /author:
     post:
-      operationId: "createAuthor"
+      operationId: createAuthor
       description: This endpoint will create a new author entity
       requestBody:
         required: true
@@ -128,19 +133,319 @@ paths:
             schema:
               $ref: "#/components/schemas/AuthorContent"
       responses:
-        "201":
+        201:
           description: "Created"
           content:
             "application/json":
               schema:
                 $ref: "#/components/schemas/Author"
-        "400":
+        400:
+          description: "Bad request"
+        "5XX":
+          description: Unexpected error
+    get:
+      operationId: getAllAuthors
+      description: This endpoint will return all the stored authors
+      responses:
+        "200":
+          description: "OK"
+          content:
+            "application/json":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Author"
+        "404":
+          description: the authors could not be found
+        "5XX":
+          description: Unexpected error
+
+  /author/{id}:
+    put:
+      operationId: modifyAuthor
+      description: This endpoint will modify an author entity
+      parameters:
+        - name: id
+          description: id of an author
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/AuthorContent"
+      responses:
+        200:
+          description: "OK"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Author"
+        409:
+          description: Conflict
+        "5XX":
+          description: Unexpected error occured
+    get:
+      operationId: getAuthor
+      description: This endpoint will return an existing author after its id
+      parameters:
+        - name: id
+          description: id of a book
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        200:
+          description: "OK"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Author"
+        404:
+          description: "Not Found"
+        "5XX":
+          description: Unexpected error occured
+    delete:
+      operationId: deleteAuthor
+      description: This endpoint deletes an author after a given id
+      parameters:
+        - name: id
+          description: id of a book
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        204:
+          description: "No Content"
+        404:
+          description: "Author not found"
+        "5XX":
+          description: Unexpected error occured
+
+  # create the corresponding endpoints for getBookShelf, getAllBookShelves, modifyBookShelf, deleteBookShelf, createBookShelf
+  /book-shelf:
+    get:
+      operationId: getAllBookShelves
+      description: This endpoint will retrieve all bookshelves from the database
+      responses:
+        200:
+          description: "OK"
+          content:
+            "application/json":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BookShelf"
+        404:
+          description: "Not Found"
+        "5XX":
+          description: Unexpected error
+
+    post:
+      operationId: createBookShelf
+      description: This endpoint will create a new bookshelf inside of a library
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/BookShelfContent"
+      responses:
+        201:
+          description: "Created"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/BookShelfContent"
+        400:
           description: "Bad request"
         "5XX":
           description: Unexpected error
 
-  # create the corresponding endpoints for getBookShelf, getAllBookShelves, modifyBookShelf, deleteBookShelf, createBookShelf
+  /book-shelf/{id}:
+    get:
+      operationId: getBookShelf
+      description: This endpoint will retrieve a bookshelf with its corresponding books after a given id
+      parameters:
+        - name: id
+          description: id of a bookshelf
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        200:
+          description: "OK"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/BookShelf"
+        404:
+          description: Not Found
+        "5XX":
+          description: Unexpected error occured
+
+    put:
+      operationId: modifyBookShelf
+      description: This endpoint will modify a bookshelf
+      parameters:
+        - name: id
+          description: id of a bookshelf
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/BookShelfContent"
+      responses:
+        200:
+          description: "OK"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/BookShelf"
+        409:
+          description: Conflict
+        "5XX":
+          description: Unexpected error occured
+
+    delete:
+      operationId: deleteBookShelf
+      description: This endpoint will delete a bookshelf after a given id
+      parameters:
+        - name: id
+          description: id of a bookshelf
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        204:
+          description: "No Content"
+        404:
+          description: "Bookshelf not found"
+        "5XX":
+          description: Unexpected error occured
+
   # create the corresponding endpoints for createLibrary, getAllLibraries, getLibrary, modifyLibrary, deleteLibrary
+
+  /library:
+    post:
+      operationId: createLibrary
+      description: This endpoint creates a new library in the database
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/LibraryContent"
+      responses:
+        201:
+          description: "Created"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Library"
+        400:
+          description: "Bad request"
+        "5XX":
+          description: Unexpected error
+
+    get:
+      operationId: getAllLibraries
+      description: This endpoint will retrieve all libraries from the database
+      responses:
+        200:
+          description: "OK"
+          content:
+            "application/json":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Library"
+        404:
+          description: "Not Found"
+        "5XX":
+          description: Unexpected error
+
+  /library/{id}:
+    get:
+      operationId: getLibrary
+      description: This endpoint will retrieve a library from the database after a given id
+      parameters:
+        - name: id
+          description: id of a library
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        200:
+          description: "OK"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Library"
+        404:
+          description: Not Found
+        "5XX":
+          description: Unexpected error occured
+
+    put:
+      operationId: modifyLibrary
+      description: This endpoint will modify an existing library
+      parameters:
+        - name: id
+          description: id of a library
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/LibraryContent"
+      responses:
+        200:
+          description: "OK"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Library"
+        409:
+          description: Conflict
+        "5XX":
+          description: Unexpected error occured
+
+    delete:
+      operationId: deleteLibrary
+      description: This endpoint will delete a library after an id
+      parameters:
+        - name: id
+          description: id of a library
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        204:
+          description: No Content
+        404:
+          description: Library not found
+        "5XX":
+          description: Unexpected error occured
+
 components:
   schemas:
     AuthorContent:
@@ -152,20 +457,19 @@ components:
         - name
 
     Author:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        booksWritten:
-          type: array
-          items:
-            $ref: "#/components/schemas/Book"
-      required:
-        - id
-        - name
-        - booksWritten
+      allOf:
+        - $ref: "#/components/schemas/AuthorContent"
+        - type: object
+          properties:
+            id:
+              type: string
+            booksWritten:
+              type: array
+              items:
+                $ref: "#/components/schemas/Book"
+          required:
+            - id
+            - booksWritten
 
     BookContent:
       type: object
@@ -174,15 +478,15 @@ components:
           type: string
         numberOfPages:
           type: number
-        authorName:
-          type: string
         authorId:
+          type: string
+        bookShelfId:
           type: string
       required:
         - title
         - numberOfPages
-        - authorName
         - authorId
+        - bookShelfId
 
     Book:
       allOf:
@@ -194,25 +498,50 @@ components:
           required:
             - id
 
-    BookShelf:
+    BookShelfContent:
       type: object
       properties:
-        id:
+        libraryId:
           type: string
-        books:
-          type: array
-          items:
-            $ref: "#/components/schemas/Book"
       required:
-        - id
-        - books
+        - libraryId
 
-    Library:
+    BookShelf:
+      allOf:
+        - $ref: "#/components/schemas/BookShelfContent"
+        - type: object
+          properties:
+            id:
+              type: string
+            books:
+              type: array
+              items:
+                $ref: "#/components/schemas/Book"
+          required:
+            - id
+            - books
+
+    LibraryContent:
       type: object
       properties:
         name:
           type: string
-        bookShelves:
-          type: array
-          items:
-            $ref: "#/components/schemas/BookShelf"
+      required:
+        - name
+
+    Library:
+      allOf:
+        - $ref: "#/components/schemas/LibraryContent"
+        - type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            bookShelves:
+              type: array
+              items:
+                $ref: "#/components/schemas/BookShelf"
+          required:
+            - id
+            - bookShelves

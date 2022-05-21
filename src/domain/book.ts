@@ -3,5 +3,5 @@ export interface Book {
   title: string;
   numberOfPages: number;
   authorId: string;
-  authorName: string;
+  bookShelfId: string;
 }

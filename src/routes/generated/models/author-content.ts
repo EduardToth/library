@@ -13,7 +13,6 @@
  */
 
 
-import { Book } from './book';
 
 /**
  * 
@@ -27,11 +26,5 @@ export interface AuthorContent {
      * @memberof AuthorContent
      */
     'name': string;
-    /**
-     * 
-     * @type {Array<Book>}
-     * @memberof AuthorContent
-     */
-    'booksWritten': Array<Book>;
 }
 

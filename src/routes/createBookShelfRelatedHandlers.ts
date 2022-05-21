@@ -6,9 +6,10 @@ import {
   BookShelfContent as BookShelfContentDTO,
 } from "./generated";
 import { v4 } from "uuid";
+import { mapBookShelfToDTO } from "./dtoConversions";
 
 export function createBookShelfRelatedHandlers() {
-  async function getAllBooks(context: Context, res: Response) {
+  async function getAllBookShelves(context: Context, res: Response) {
     res.status(StatusCodes.OK).json([]);
   }
 
@@ -16,11 +17,61 @@ export function createBookShelfRelatedHandlers() {
     const bookShelfContent = context.request.requestBody as BookShelfContentDTO;
     const { libraryId } = bookShelfContent;
     //check if the library exists
-    //check if all ids in the books array exist
-    const bookShelf: BookShelf = { ...bookShelfContent, id: v4() };
-
-    res.status(StatusCodes.CREATED).json(bookShelf);
+    //if so, add bookShelf id to the corresponding library
+    const bookShelf: BookShelf = {
+      ...bookShelfContent,
+      id: v4(),
+      libraryId: v4(),
+      books: [],
+    };
+    const bookShelfDTO = mapBookShelfToDTO(bookShelf);
+    res.status(StatusCodes.CREATED).json(bookShelfDTO);
   }
 
-  return { getAllBooks, createBookShelf };
+  async function getBookShelf(context: Context, res: Response) {
+    const id = context.request.params.id as string;
+
+    const bookShelf: BookShelf = {
+      books: [],
+      id,
+      libraryId: v4(),
+    };
+
+    const bookShelfDTO = mapBookShelfToDTO(bookShelf);
+
+    res.status(StatusCodes.OK).json(bookShelfDTO);
+  }
+
+  async function modifyBookShelf(context: Context, res: Response) {
+    const id = context.request.params.id as string;
+    const { libraryId } = context.request.requestBody as BookShelfContentDTO;
+
+    // check if the library exists
+    // if so, modify the bookShelf array from the library
+
+    const bookShelf: BookShelf = {
+      books: [],
+      id,
+      libraryId,
+    };
+
+    const bookShelfDTO = mapBookShelfToDTO(bookShelf);
+
+    res.send(StatusCodes.OK).json(bookShelfDTO);
+  }
+
+  async function deleteBookShelf(context: Context, res: Response) {
+    const id = context.request.params.id as string;
+
+    //delete also the bookshelfId from the library, delete all stored books in the bookshelf
+
+    res.status(StatusCodes.NO_CONTENT).send();
+  }
+  return {
+    getAllBookShelves,
+    createBookShelf,
+    getBookShelf,
+    modifyBookShelf,
+    deleteBookShelf,
+  };
 }
