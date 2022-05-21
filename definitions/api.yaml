@@ -62,12 +62,7 @@ paths:
       operationId: getBook
       description: Gets a book after a given id
       parameters:
-        - name: id
-          description: id of a book
-          required: true
-          in: path
-          schema:
-            type: string
+        - $ref: "#/components/parameters/bookId"
       responses:
         200:
           description: "OK"
@@ -83,12 +78,7 @@ paths:
       operationId: deleteBook
       description: This will delete a book after its id
       parameters:
-        - name: id
-          description: id of a book
-          required: true
-          in: path
-          schema:
-            type: string
+        - $ref: "#/components/parameters/bookId"
       responses:
         204:
           description: no content
@@ -98,12 +88,7 @@ paths:
       operationId: updateBook
       description: This endpoint will update a book entity
       parameters:
-        - name: id
-          description: id of a book
-          required: true
-          in: path
-          schema:
-            type: string
+        - $ref: "#/components/parameters/bookId"
       requestBody:
         required: true
         content:
@@ -143,6 +128,7 @@ paths:
           description: "Bad request"
         "5XX":
           description: Unexpected error
+
     get:
       operationId: getAllAuthors
       description: This endpoint will return all the stored authors
@@ -165,12 +151,7 @@ paths:
       operationId: modifyAuthor
       description: This endpoint will modify an author entity
       parameters:
-        - name: id
-          description: id of an author
-          required: true
-          in: path
-          schema:
-            type: string
+        - $ref: "#/components/parameters/authorId"
       requestBody:
         required: true
         content:
@@ -188,16 +169,12 @@ paths:
           description: Conflict
         "5XX":
           description: Unexpected error occured
+
     get:
       operationId: getAuthor
       description: This endpoint will return an existing author after its id
       parameters:
-        - name: id
-          description: id of a book
-          required: true
-          in: path
-          schema:
-            type: string
+        - $ref: "#/components/parameters/authorId"
       responses:
         200:
           description: "OK"
@@ -209,16 +186,12 @@ paths:
           description: "Not Found"
         "5XX":
           description: Unexpected error occured
+
     delete:
       operationId: deleteAuthor
       description: This endpoint deletes an author after a given id
       parameters:
-        - name: id
-          description: id of a book
-          required: true
-          in: path
-          schema:
-            type: string
+        - $ref: "#/components/parameters/authorId"
       responses:
         204:
           description: "No Content"
@@ -545,3 +518,19 @@ components:
           required:
             - id
             - bookShelves
+  parameters:
+    bookId:
+      name: id
+      in: path
+      required: true
+      description: The id of the book
+      schema:
+        type: string
+
+    authorId:
+      name: id
+      in: path
+      required: true
+      description: The id of the author
+      schema:
+        type: string
