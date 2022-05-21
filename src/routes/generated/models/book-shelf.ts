@@ -13,25 +13,14 @@
  */
 
 
+import { AuthorAllOf } from './author-all-of';
 import { Book } from './book';
+import { BookShelfContent } from './book-shelf-content';
 
 /**
- * 
+ * @type BookShelf
  * @export
- * @interface BookShelf
  */
-export interface BookShelf {
-    /**
-     * 
-     * @type {string}
-     * @memberof BookShelf
-     */
-    'id': string;
-    /**
-     * 
-     * @type {Array<Book>}
-     * @memberof BookShelf
-     */
-    'books': Array<Book>;
-}
+export type BookShelf = AuthorAllOf & BookShelfContent;
+
 

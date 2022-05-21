@@ -1,8 +1,9 @@
 index.ts
+models/author-all-of.ts
 models/author-content.ts
 models/author.ts
-models/book-all-of.ts
 models/book-content.ts
+models/book-shelf-content.ts
 models/book-shelf.ts
 models/book.ts
 models/index.ts

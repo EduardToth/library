@@ -13,25 +13,18 @@
  */
 
 
-import { Book } from './book';
 
 /**
  * 
  * @export
- * @interface AuthorContent
+ * @interface AuthorAllOf
  */
-export interface AuthorContent {
+export interface AuthorAllOf {
     /**
      * 
      * @type {string}
-     * @memberof AuthorContent
+     * @memberof AuthorAllOf
      */
-    'name': string;
-    /**
-     * 
-     * @type {Array<Book>}
-     * @memberof AuthorContent
-     */
-    'booksWritten': Array<Book>;
+    'id': string;
 }
 

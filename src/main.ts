@@ -5,8 +5,29 @@ import OpenAPIBackend, { Context } from "openapi-backend";
 import { createHandlers } from "./routes/createHandlers";
 import { Response } from "express";
 import bodyParser from "body-parser";
+import { IncomingHttpHeaders } from "http";
+import QueryString from "qs";
 
-async function init() {
+function getHeadersWithNoUndefinedAsValues(headers: IncomingHttpHeaders) {
+  const headerEntries = Object.entries(headers);
+  const headerEntriesWithNotUndefinedValues = headerEntries.filter(
+    (entry): entry is [string, string | string[]] => !isNil(entry[1])
+  );
+
+  return Object.fromEntries(headerEntriesWithNotUndefinedValues);
+}
+
+function getQueryParametersWithNoUndefinedAsValues(
+  query: QueryString.ParsedQs
+) {
+  const queryEntries = Object.entries(query);
+  const queryEntriesWithNoUndefinedAsValues = queryEntries.filter(
+    (entry): entry is [string, string | string[]] => !isNil(entry[1])
+  );
+  return query && Object.fromEntries(queryEntriesWithNoUndefinedAsValues);
+}
+
+async function getConfiguredApp(): Promise<express.Express> {
   const api = new OpenAPIBackend({
     definition: "./definitions/api.yaml",
     handlers: { ...createHandlers() },
@@ -26,31 +47,20 @@ async function init() {
   await api.init();
 
   const app: Express = express();
+  return app.use(bodyParser.json()).use((request, response) => {
+    const headers = getHeadersWithNoUndefinedAsValues(request.headers);
 
-  app.use(bodyParser.json());
+    const query = getQueryParametersWithNoUndefinedAsValues(request.query);
 
-  app.use((request, response) => {
-    const headers = Object.fromEntries(
-      Object.entries(request.headers).filter(
-        (entry): entry is [string, string | string[]] => !isNil(entry[1])
-      )
-    );
-
-    const query =
-      request.query &&
-      Object.fromEntries(
-        Object.entries(request.query).filter(
-          (entry): entry is [string, string | string[]] => !isNil(entry[1])
-        )
-      );
-
+    const { path } = request;
     api
-      .handleRequest(
-        { ...request, headers, query, path: request.path },
-        response
-      )
+      .handleRequest({ ...request, headers, query, path }, response)
       .catch(() => response.status(StatusCodes.INTERNAL_SERVER_ERROR).end());
   });
+}
+
+async function init() {
+  const app = await getConfiguredApp();
 
   return app.listen(5000, () =>
     console.log("Server is listening on port 5000")
