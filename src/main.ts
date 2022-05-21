@@ -7,6 +7,9 @@ import { Response } from "express";
 import bodyParser from "body-parser";
 import { IncomingHttpHeaders } from "http";
 import QueryString from "qs";
+import mongoose from "mongoose";
+import { createService } from "./services/createService";
+import { getRepository } from "./repositories/getRepository";
 
 function getHeadersWithNoUndefinedAsValues(headers: IncomingHttpHeaders) {
   const headerEntries = Object.entries(headers);
@@ -28,9 +31,15 @@ function getQueryParametersWithNoUndefinedAsValues(
 }
 
 async function getConfiguredApp(): Promise<express.Express> {
+  const databaseUrl = "mongodb://localhost:27017/libraryDB";
+  const database = await mongoose.connect(databaseUrl);
+  console.log("It worked");
+  const repository = getRepository(database);
+  const service = createService(repository);
+
   const api = new OpenAPIBackend({
     definition: "./definitions/api.yaml",
-    handlers: { ...createHandlers() },
+    handlers: { ...createHandlers(service) },
     validate: true,
   });
 

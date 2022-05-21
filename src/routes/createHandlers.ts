@@ -1,11 +1,12 @@
+import { createService } from "../services/createService";
 import { createAuthorRelatedHandlers } from "./createAuthorRelatedHandlers";
 import { createBookRelatedHandlers } from "./createBookRelatedHandlers";
 import { getHelloWorldMessage } from "./createHelloWorldHandler";
 
-export function createHandlers() {
+export function createHandlers(service: ReturnType<typeof createService>) {
   return {
     getHelloWorldMessage,
-    ...createBookRelatedHandlers(),
-    ...createAuthorRelatedHandlers(),
+    ...createBookRelatedHandlers(service),
+    ...createAuthorRelatedHandlers(service),
   };
 }

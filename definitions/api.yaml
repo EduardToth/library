@@ -145,7 +145,45 @@ paths:
           description: "Bad request"
         "5XX":
           description: Unexpected error
+    get:
+      operationId: getAllAuthors
+      description: This endpoint will return all the stored authors
+      responses:
+        "200":
+          description: "OK"
+          content:
+            "application/json":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Author"
+        "404":
+          description: Not Found
+        "5XX":
+          description: Unexpected error
 
+  /author/{id}:
+    get:
+      operationId: getAuthor
+      description: This endpoint will provide an author corresponding to its id
+      parameters:
+        - name: id
+          description: id of a book
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "OK"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Author"
+        "404":
+          description: Not Found
+        "5XX":
+          description: Unexpected Error
   # create the corresponding endpoints for getBookShelf, getAllBookShelves, modifyBookShelf, deleteBookShelf, createBookShelf
   # create the corresponding endpoints for createLibrary, getAllLibraries, getLibrary, modifyLibrary, deleteLibrary, addBookShelfToLibray, addBookShelvesToLibrary
 components:
@@ -237,8 +275,6 @@ components:
         - type: object
           properties:
             id:
-              type: string
-            name:
               type: string
             bookShelves:
               type: array
