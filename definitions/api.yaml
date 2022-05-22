@@ -245,12 +245,7 @@ paths:
       operationId: getBookShelf
       description: This endpoint will retrieve a bookshelf with its corresponding books after a given id
       parameters:
-        - name: id
-          description: id of a bookshelf
-          required: true
-          in: path
-          schema:
-            type: string
+        - $ref: "#/components/parameters/bookShelfId"
       responses:
         200:
           description: "OK"
@@ -267,12 +262,7 @@ paths:
       operationId: modifyBookShelf
       description: This endpoint will modify a bookshelf
       parameters:
-        - name: id
-          description: id of a bookshelf
-          required: true
-          in: path
-          schema:
-            type: string
+        - $ref: "#/components/parameters/bookShelfId"
       requestBody:
         required: true
         content:
@@ -295,12 +285,7 @@ paths:
       operationId: deleteBookShelf
       description: This endpoint will delete a bookshelf after a given id
       parameters:
-        - name: id
-          description: id of a bookshelf
-          required: true
-          in: path
-          schema:
-            type: string
+        - $ref: "#/components/parameters/bookShelfId"
       responses:
         204:
           description: "No Content"
@@ -355,12 +340,7 @@ paths:
       operationId: getLibrary
       description: This endpoint will retrieve a library from the database after a given id
       parameters:
-        - name: id
-          description: id of a library
-          required: true
-          in: path
-          schema:
-            type: string
+        - $ref: "#/components/parameters/library"
       responses:
         200:
           description: "OK"
@@ -377,12 +357,7 @@ paths:
       operationId: modifyLibrary
       description: This endpoint will modify an existing library
       parameters:
-        - name: id
-          description: id of a library
-          required: true
-          in: path
-          schema:
-            type: string
+        - $ref: "#/components/parameters/library"
       requestBody:
         required: true
         content:
@@ -405,12 +380,7 @@ paths:
       operationId: deleteLibrary
       description: This endpoint will delete a library after an id
       parameters:
-        - name: id
-          description: id of a library
-          required: true
-          in: path
-          schema:
-            type: string
+        - $ref: "#/components/parameters/library"
       responses:
         204:
           description: No Content
@@ -532,5 +502,21 @@ components:
       in: path
       required: true
       description: The id of the author
+      schema:
+        type: string
+
+    bookShelfId:
+      name: id
+      in: path
+      required: true
+      description: The id of the bookshelf
+      schema:
+        type: string
+
+    libraryId:
+      name: id
+      in: path
+      required: true
+      description: The id of the library
       schema:
         type: string

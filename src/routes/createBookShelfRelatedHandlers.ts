@@ -9,7 +9,7 @@ import { v4 } from "uuid";
 import { mapBookShelfToDTO } from "./dtoConversions";
 
 export function createBookShelfRelatedHandlers() {
-  async function getAllBookShelves(context: Context, res: Response) {
+  async function getAllBookShelves(_context: Context, res: Response) {
     res.status(StatusCodes.OK).json([]);
   }
 
