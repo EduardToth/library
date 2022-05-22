@@ -34,6 +34,8 @@ async function getConfiguredApp(): Promise<express.Express> {
     validate: true,
   });
 
+  console.log(api);
+
   api.register("validationFail", (c: Context, res: Response) => {
     console.log("Invalid Request", {
       status: StatusCodes.BAD_REQUEST,

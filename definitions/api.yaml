@@ -6,7 +6,7 @@ paths:
   /:
     get:
       description: Returns "Hello world"
-      operationId: "getHelloWorldMessage"
+      operationId: getHelloWorldMessage
       responses:
         200:
           description: "OK"
@@ -37,7 +37,7 @@ paths:
         "5XX":
           description: Unexpected error
     post:
-      operationId: "createBook"
+      operationId: createBook
       description: This endpoint creates a new book in the database
       requestBody:
         required: true
@@ -200,7 +200,6 @@ paths:
         "5XX":
           description: Unexpected error occured
 
-  # create the corresponding endpoints for getBookShelf, getAllBookShelves, modifyBookShelf, deleteBookShelf, createBookShelf
   /book-shelf:
     get:
       operationId: getAllBookShelves
@@ -294,8 +293,6 @@ paths:
         "5XX":
           description: Unexpected error occured
 
-  # create the corresponding endpoints for createLibrary, getAllLibraries, getLibrary, modifyLibrary, deleteLibrary
-
   /library:
     post:
       operationId: createLibrary
@@ -340,7 +337,7 @@ paths:
       operationId: getLibrary
       description: This endpoint will retrieve a library from the database after a given id
       parameters:
-        - $ref: "#/components/parameters/library"
+        - $ref: "#/components/parameters/libraryId"
       responses:
         200:
           description: "OK"
@@ -357,7 +354,7 @@ paths:
       operationId: modifyLibrary
       description: This endpoint will modify an existing library
       parameters:
-        - $ref: "#/components/parameters/library"
+        - $ref: "#/components/parameters/libraryId"
       requestBody:
         required: true
         content:
@@ -380,7 +377,7 @@ paths:
       operationId: deleteLibrary
       description: This endpoint will delete a library after an id
       parameters:
-        - $ref: "#/components/parameters/library"
+        - $ref: "#/components/parameters/libraryId"
       responses:
         204:
           description: No Content
