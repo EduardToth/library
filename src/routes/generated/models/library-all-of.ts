@@ -29,6 +29,12 @@ export interface LibraryAllOf {
     'id': string;
     /**
      * 
+     * @type {string}
+     * @memberof LibraryAllOf
+     */
+    'name'?: string;
+    /**
+     * 
      * @type {Array<BookShelf>}
      * @memberof LibraryAllOf
      */
