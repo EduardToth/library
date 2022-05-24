@@ -10,6 +10,7 @@ import QueryString from "qs";
 import mongoose from "mongoose";
 import { createService } from "./services/createService";
 import { getRepository } from "./repositories/getRepository";
+import cors from "cors";
 
 function getHeadersWithNoUndefinedAsValues(headers: IncomingHttpHeaders) {
   const headerEntries = Object.entries(headers);
@@ -33,7 +34,6 @@ function getQueryParametersWithNoUndefinedAsValues(
 async function getConfiguredApp(): Promise<express.Express> {
   const databaseUrl = "mongodb://localhost:27017/libraryDB";
   const database = await mongoose.connect(databaseUrl);
-  console.log("It worked");
   const repository = getRepository(database);
   const service = createService(repository);
 
@@ -57,16 +57,19 @@ async function getConfiguredApp(): Promise<express.Express> {
 
   const app: Express = express();
 
-  return app.use(bodyParser.json()).use((request, response) => {
-    const headers = getHeadersWithNoUndefinedAsValues(request.headers);
+  return app
+    .use(bodyParser.json())
+    .use((request, response) => {
+      const headers = getHeadersWithNoUndefinedAsValues(request.headers);
 
-    const query = getQueryParametersWithNoUndefinedAsValues(request.query);
+      const query = getQueryParametersWithNoUndefinedAsValues(request.query);
 
-    const { path } = request;
-    api
-      .handleRequest({ ...request, headers, query, path }, response)
-      .catch(() => response.status(StatusCodes.INTERNAL_SERVER_ERROR).end());
-  });
+      const { path } = request;
+      api
+        .handleRequest({ ...request, headers, query, path }, response)
+        .catch(() => response.status(StatusCodes.INTERNAL_SERVER_ERROR).end());
+    })
+    .use(cors());
 }
 
 async function init() {

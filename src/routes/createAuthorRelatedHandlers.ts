@@ -39,7 +39,7 @@ export function createAuthorRelatedHandlers(
     } else {
       const authorDTOs = authors.map((author) => mapAuthorToDTO(author));
 
-      res.status(StatusCodes.NOT_FOUND).json(authorDTOs);
+      res.status(StatusCodes.OK).json(authorDTOs);
     }
   }
 
@@ -57,5 +57,32 @@ export function createAuthorRelatedHandlers(
     }
   }
 
-  return { createAuthor, getAllAuthors, getAuthor };
+  async function deleteAuthor(context: Context, res: Response) {
+    const id = context.request.params.id as string;
+
+    const result = await service.getAuthorService().deleteAuthor(id);
+
+    if (result instanceof NotFoundError) {
+      res.status(StatusCodes.NOT_FOUND).send();
+    } else {
+      res.status(StatusCodes.NO_CONTENT).send();
+    }
+  }
+
+  async function modifyAuthor(context: Context, res: Response) {
+    const id = context.request.params.id as string;
+    const { name } = context.request.requestBody as AuthorContentDTO;
+
+    const result = await service.getAuthorService().modifyAuthor(id, name);
+
+    if (result instanceof ConflictError) {
+      res.status(StatusCodes.CONFLICT).send();
+    } else {
+      const authorDTO = mapAuthorToDTO(result);
+
+      res.status(StatusCodes.OK).json(authorDTO);
+    }
+  }
+
+  return { createAuthor, getAllAuthors, getAuthor, deleteAuthor, modifyAuthor };
 }

@@ -26,7 +26,7 @@ export function createBookRelatedHandlers(
     const result = await service.getBookService().createBook(book);
 
     if (result instanceof ConflictError) {
-      res.status(StatusCodes.CONFLICT).send();
+      res.status(StatusCodes.BAD_REQUEST).send();
     } else {
       const bookDTO = mapBookToDTO(book);
 

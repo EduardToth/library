@@ -4,6 +4,7 @@ import { LibraryContent as LibraryContentDTO } from "./generated";
 import { v4 } from "uuid";
 import { Library } from "../domain";
 import { StatusCodes } from "http-status-codes";
+import { mapLibraryToDTO } from "./dtoConversions";
 
 export function createLibraryRelatedHandlers() {
   async function createLibrary(context: Context, res: Response) {
@@ -14,8 +15,8 @@ export function createLibraryRelatedHandlers() {
       bookShelves: [],
       id: v4(),
     };
-
-    res.status(StatusCodes.CREATED).json(library);
+    const libraryDTO = mapLibraryToDTO(library);
+    res.status(StatusCodes.CREATED).json(libraryDTO);
   }
 
   async function getLibrary(context: Context, res: Response) {
@@ -27,7 +28,8 @@ export function createLibraryRelatedHandlers() {
       bookShelves: [],
     };
 
-    res.status(StatusCodes.CREATED).json(library);
+    const libraryDTO = mapLibraryToDTO(library);
+    res.status(StatusCodes.CREATED).json(libraryDTO);
   }
 
   async function getAllLibraries(_context: Context, res: Response) {
