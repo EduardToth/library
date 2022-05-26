@@ -61,7 +61,6 @@ export function createAuthorRelatedHandlers(
     const id = context.request.params.id as string;
 
     const result = await service.getAuthorService().deleteAuthor(id);
-
     if (result instanceof NotFoundError) {
       res.status(StatusCodes.NOT_FOUND).send();
     } else {

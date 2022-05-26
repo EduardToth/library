@@ -2,6 +2,7 @@ import { Author } from "../domain";
 import { ConflictError } from "../exceptions/ConflictError";
 import { NotFoundError } from "../exceptions/NotFoundError";
 import { getRepository } from "../repositories/getRepository";
+import { getBookService } from "./getBookService";
 
 export function getAuthorService(repository: ReturnType<typeof getRepository>) {
   const authorRepository = repository.getAuthorRepository();
@@ -19,8 +20,6 @@ export function getAuthorService(repository: ReturnType<typeof getRepository>) {
   }
 
   async function deleteAuthor(id: string): Promise<NotFoundError | void> {
-    const bookRepository = repository.getBookRepository();
-
     const author = await authorRepository.getAuthor(id);
 
     if (author instanceof NotFoundError) {
@@ -29,7 +28,7 @@ export function getAuthorService(repository: ReturnType<typeof getRepository>) {
 
     const deletionPromiseResults = author.booksWritten
       .map((book) => book.id)
-      .map((id) => bookRepository.deleteBook(id));
+      .map((id) => getBookService(repository).deleteBook(id));
 
     const deletionResults = await Promise.all(deletionPromiseResults);
 
@@ -40,8 +39,8 @@ export function getAuthorService(repository: ReturnType<typeof getRepository>) {
     if (notFoundError instanceof NotFoundError) {
       return notFoundError;
     }
-    const result = await authorRepository.deleteAuthor(id);
 
+    const result = await authorRepository.deleteAuthor(id);
     if (result instanceof NotFoundError) {
       return result;
     }

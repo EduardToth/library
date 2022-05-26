@@ -72,7 +72,9 @@ export function getBookRepository(database: typeof mongoose) {
   ): Promise<Book | ConflictError> {
     try {
       const bookDAO = mapBookToDAO(book);
-      const result = await BookModel.findByIdAndUpdate(id, bookDAO).exec();
+      const result = await BookModel.findByIdAndUpdate(id, bookDAO, {
+        new: true,
+      }).exec();
 
       if (isNil(result)) {
         return new ConflictError();

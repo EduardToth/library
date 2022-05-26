@@ -101,7 +101,9 @@ export function getAuthorRepository(database: typeof mongoose) {
   ): Promise<Author | ConflictError> {
     const authorDAO = mapAuthorToDAO(author);
     try {
-      const result = await AuthorModel.findByIdAndUpdate(id, authorDAO).exec();
+      const result = await AuthorModel.findByIdAndUpdate(id, authorDAO, {
+        new: true,
+      }).exec();
 
       if (isNil(result)) {
         return new ConflictError();

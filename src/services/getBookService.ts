@@ -28,8 +28,8 @@ export function getBookService(repository: ReturnType<typeof getRepository>) {
     return bookRepository.getAllBooks();
   }
 
-  function removeBookIdFromAuthor(authorId: string, bookId: string) {
-    repository
+  async function removeBookIdFromAuthor(authorId: string, bookId: string) {
+    return repository
       .getAuthorRepository()
       .removeBookIdFromAuthor(authorId, bookId)
       .then((result) => (result ? result : new Error()))
@@ -38,8 +38,8 @@ export function getBookService(repository: ReturnType<typeof getRepository>) {
       );
   }
 
-  function addBookIdToAuthor(authorId: string, bookId: string) {
-    repository
+  async function addBookIdToAuthor(authorId: string, bookId: string) {
+    return repository
       .getAuthorRepository()
       .addBookIdToAuthor(authorId, bookId)
       .then((result) => (result ? result : new Error()))
@@ -51,6 +51,7 @@ export function getBookService(repository: ReturnType<typeof getRepository>) {
   async function updateBook(id: string, book: Book) {
     // move references to new bookShelf if necessary
     const { authorId } = book;
+    /*
     return bookRepository
       .getBook(id)
       .then((result) =>
@@ -60,6 +61,21 @@ export function getBookService(repository: ReturnType<typeof getRepository>) {
       .then(() => addBookIdToAuthor(authorId, id))
       .then(() => bookRepository.updateBook(id, book))
       .catch(() => new ConflictError());
+    */
+    try {
+      const oldBook = await bookRepository.getBook(id);
+      const oldAuthorId = executeIfNoErrorOccured<Book, string>(
+        oldBook,
+        (oldBook) => oldBook.authorId
+      );
+
+      await removeBookIdFromAuthor(oldAuthorId, id);
+      await addBookIdToAuthor(authorId, id);
+
+      return bookRepository.updateBook(id, book);
+    } catch {
+      return new ConflictError();
+    }
   }
 
   async function deleteBook(id: string) {
