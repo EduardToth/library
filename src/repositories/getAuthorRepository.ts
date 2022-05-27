@@ -6,28 +6,16 @@ import { AuthorDAO, authorDAOSchema } from "./schemas";
 import { getBookRepository } from "./getBookRepository";
 import { NotFoundError } from "../exceptions/NotFoundError";
 import { isNil } from "lodash";
+import { BadRequestError } from "../exceptions/BadRequestError";
 export function getAuthorRepository(database: typeof mongoose) {
   const AUTHOR_ENTITY_NAME = "authors";
-  const { getBook } = getBookRepository(database);
+  const bookRepository = getBookRepository(database);
 
   const AuthorModel = database.model(AUTHOR_ENTITY_NAME, authorDAOSchema);
 
-  async function getBooksAfterIds(bookIds: string[]): Promise<Book[]> {
-    const bookRequestPromises = bookIds.map((id) => getBook(id));
-    const retrievedBooks = await Promise.all(bookRequestPromises);
-
-    const error = retrievedBooks.find(
-      (retrievedBook) => retrievedBook instanceof Error
-    );
-
-    if (error) {
-      throw error;
-    }
-
-    return retrievedBooks as Book[];
-  }
-
-  async function createAuthor(author: Author): Promise<Author | ConflictError> {
+  async function createAuthor(
+    author: Author
+  ): Promise<Author | BadRequestError> {
     const authorDAO = mapAuthorToDAO(author);
 
     try {
@@ -38,12 +26,14 @@ export function getAuthorRepository(database: typeof mongoose) {
     } catch (err) {
       console.log(err);
 
-      return new ConflictError();
+      return new BadRequestError();
     }
   }
 
   async function getAuthorFromDAO(authorDAO: AuthorDAO): Promise<Author> {
-    const booksWrittenByThisAuthor = await getBooksAfterIds(authorDAO.bookIds);
+    const booksWrittenByThisAuthor = await bookRepository.getBooksOrThrow(
+      authorDAO.bookIds
+    );
 
     return mapDaoToAuthor(authorDAO, booksWrittenByThisAuthor);
   }
@@ -79,15 +69,13 @@ export function getAuthorRepository(database: typeof mongoose) {
     }
   }
 
-  async function deleteAuthor(id: string): Promise<NotFoundError | Author> {
+  async function deleteAuthor(id: string): Promise<NotFoundError | void> {
     try {
       const result = await AuthorModel.findByIdAndDelete(id).exec();
 
       if (isNil(result)) {
         return new NotFoundError();
       }
-
-      return getAuthorFromDAO(result);
     } catch (err) {
       console.log(err);
 

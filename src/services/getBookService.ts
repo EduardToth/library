@@ -1,7 +1,10 @@
 import { Book } from "../domain";
+import { BadRequestError } from "../exceptions/BadRequestError";
 import { ConflictError } from "../exceptions/ConflictError";
 import { NotFoundError } from "../exceptions/NotFoundError";
 import { getRepository } from "../repositories/getRepository";
+import { getAuthorService } from "./getAuthorService";
+import { getBookShelfService } from "./getBookShelfService";
 
 export function getBookService(repository: ReturnType<typeof getRepository>) {
   const bookRepository = repository.getBookRepository();
@@ -10,64 +13,46 @@ export function getBookService(repository: ReturnType<typeof getRepository>) {
   }
 
   async function createBook(book: Book) {
-    // add reference to bookShelf
-    const { authorId, id } = book;
-    const success = await repository
-      .getAuthorRepository()
-      .addBookIdToAuthor(authorId, id);
+    try {
+      const { authorId, id, bookShelfId } = book;
 
-    if (success === false) {
-      return new ConflictError();
+      await Promise.all([
+        getAuthorService(repository).addBookIdToAuthor(authorId, id),
+        getBookShelfService(repository).addBookIdToBookShelf(id, bookShelfId),
+      ]);
+
+      return bookRepository.createBook(book);
+    } catch {
+      return new BadRequestError();
     }
-
-    return bookRepository.createBook(book);
   }
 
   async function getAllBooks() {
     return bookRepository.getAllBooks();
   }
 
-  async function removeBookIdFromAuthor(authorId: string, bookId: string) {
-    try {
-      const result = await repository
-        .getAuthorRepository()
-        .removeBookIdFromAuthor(authorId, bookId);
-
-      if (result === false) {
-        throw new Error("Unsuccessful removal");
-      }
-    } catch {
-      throw new Error("Unsuccessful removal");
-    }
-  }
-
-  async function addBookIdToAuthor(authorId: string, bookId: string) {
-    try {
-      const result = await repository
-        .getAuthorRepository()
-        .addBookIdToAuthor(authorId, bookId);
-
-      if (result === false) {
-        throw new Error("Unsuccessful insertion");
-      }
-    } catch {
-      throw new Error("Unsuccessful insertion");
-    }
-  }
-
   async function updateBook(id: string, book: Book) {
-    // move references to new bookShelf if necessary
-    const { authorId } = book;
+    const { authorId, bookShelfId } = book;
 
     try {
       const oldBook = await bookRepository.getBook(id);
+
       if (oldBook instanceof Error) {
         throw new Error();
       }
-      const oldAuthorId = oldBook.authorId;
 
-      await removeBookIdFromAuthor(oldAuthorId, id);
-      await addBookIdToAuthor(authorId, id);
+      const oldAuthorId = oldBook.authorId;
+      const oldBookShelfId = oldBook.bookShelfId;
+
+      await Promise.all([
+        getAuthorService(repository).removeBookIdFromAuthor(oldAuthorId, id),
+        getAuthorService(repository).addBookIdToAuthor(authorId, id),
+        getBookShelfService(repository).removeBookIdFromBookShelf(
+          id,
+          oldBookShelfId
+        ),
+        getBookShelfService(repository).addBookIdToBookShelf(id, bookShelfId),
+      ]);
 
       return bookRepository.updateBook(id, book);
     } catch {
@@ -76,7 +61,6 @@ export function getBookService(repository: ReturnType<typeof getRepository>) {
   }
 
   async function deleteBook(id: string) {
-    //delete reference from bookshelf
     try {
       const book = await bookRepository.getBook(id);
 
@@ -84,8 +68,14 @@ export function getBookService(repository: ReturnType<typeof getRepository>) {
         throw new Error();
       }
 
-      const { authorId } = book;
-      await removeBookIdFromAuthor(authorId, id);
+      const { authorId, bookShelfId } = book;
+      await Promise.all([
+        getAuthorService(repository).removeBookIdFromAuthor(authorId, id),
+        getBookShelfService(repository).removeBookIdFromBookShelf(
+          id,
+          bookShelfId
+        ),
+      ]);
 
       return bookRepository.deleteBook(id);
     } catch {
@@ -93,5 +83,22 @@ export function getBookService(repository: ReturnType<typeof getRepository>) {
     }
   }
 
-  return { getBook, createBook, getAllBooks, updateBook, deleteBook };
+  async function deleteBooks(bookIds: string[]) {
+    const deletionResults = await Promise.all(bookIds.map(deleteBook));
+
+    for (const deletionResult of deletionResults) {
+      if (deletionResult instanceof NotFoundError) {
+        throw deletionResult;
+      }
+    }
+  }
+
+  return {
+    getBook,
+    createBook,
+    getAllBooks,
+    updateBook,
+    deleteBook,
+    deleteBooks,
+  };
 }

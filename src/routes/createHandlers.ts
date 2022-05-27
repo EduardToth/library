@@ -10,7 +10,7 @@ export function createHandlers(service: ReturnType<typeof createService>) {
     getHelloWorldMessage,
     ...createBookRelatedHandlers(service),
     ...createAuthorRelatedHandlers(service),
-    ...createBookShelfRelatedHandlers(),
-    ...createLibraryRelatedHandlers(),
+    ...createBookShelfRelatedHandlers(service),
+    ...createLibraryRelatedHandlers(service),
   };
 }

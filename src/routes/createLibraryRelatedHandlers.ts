@@ -5,48 +5,80 @@ import { v4 } from "uuid";
 import { Library } from "../domain";
 import { StatusCodes } from "http-status-codes";
 import { mapLibraryToDTO } from "./dtoConversions";
+import { createService } from "../services/createService";
+import { NotFoundError } from "../exceptions/NotFoundError";
+import { ConflictError } from "../exceptions/ConflictError";
+import { BadRequestError } from "../exceptions/BadRequestError";
 
-export function createLibraryRelatedHandlers() {
+export function createLibraryRelatedHandlers(
+  service: ReturnType<typeof createService>
+) {
   async function createLibrary(context: Context, res: Response) {
     const libraryContentDTO = context.request.requestBody as LibraryContentDTO;
 
     const library: Library = {
       ...libraryContentDTO,
-      bookShelves: [],
       id: v4(),
+      bookShelves: [],
     };
-    const libraryDTO = mapLibraryToDTO(library);
-    res.status(StatusCodes.CREATED).json(libraryDTO);
+    const result = await service.getLibraryService().createLibrary(library);
+
+    if (result instanceof BadRequestError) {
+      res.status(StatusCodes.BAD_REQUEST).send();
+    } else {
+      const libraryDTO = mapLibraryToDTO(result);
+      res.status(StatusCodes.CREATED).json(libraryDTO);
+    }
   }
 
   async function getLibrary(context: Context, res: Response) {
     const id = context.request.params.id as string;
+    const result = await service.getLibraryService().getLibrary(id);
 
-    const library: Library = {
-      id,
-      name: "n",
-      bookShelves: [],
-    };
+    if (result instanceof NotFoundError) {
+      res.status(StatusCodes.NOT_FOUND).send();
+    } else {
+      const libraryDTO = mapLibraryToDTO(result);
 
-    const libraryDTO = mapLibraryToDTO(library);
-    res.status(StatusCodes.CREATED).json(libraryDTO);
+      res.status(StatusCodes.CREATED).json(libraryDTO);
+    }
   }
 
   async function getAllLibraries(_context: Context, res: Response) {
-    res.status(StatusCodes.OK).json([]);
+    const results = await service.getLibraryService().getAllLibraries();
+
+    if (results instanceof NotFoundError) {
+      res.status(StatusCodes.NOT_FOUND).send();
+    } else {
+      const libraryDTOs = results.map((result) => mapLibraryToDTO(result));
+
+      res.status(StatusCodes.CREATED).json(libraryDTOs);
+    }
   }
 
   async function modifyLibrary(context: Context, res: Response) {
     const id = context.request.params.id as string;
-    const libraryContentDTO = context.request.requestBody as LibraryContentDTO;
+    const { name } = context.request.requestBody as LibraryContentDTO;
+    const result = await service.getLibraryService().modifyLibrary(id, name);
 
-    res.status(StatusCodes.OK).json({ ...libraryContentDTO, id });
+    if (result instanceof ConflictError) {
+      res.status(StatusCodes.CONFLICT).send();
+    } else {
+      const libraryDTO = mapLibraryToDTO(result);
+
+      res.status(StatusCodes.OK).json(libraryDTO);
+    }
   }
 
   async function deleteLibrary(context: Context, res: Response) {
     const id = context.request.params.id as string;
-    // every bookshelf in this library has to be deleted
-    res.status(StatusCodes.NO_CONTENT).send();
+    const result = await service.getLibraryService().deleteLibrary(id);
+
+    if (result instanceof NotFoundError) {
+      res.status(StatusCodes.NOT_FOUND).send();
+    } else {
+      res.status(StatusCodes.NO_CONTENT).send();
+    }
   }
 
   return {

@@ -20,29 +20,20 @@ export function getAuthorService(repository: ReturnType<typeof getRepository>) {
   }
 
   async function deleteAuthor(id: string): Promise<NotFoundError | void> {
-    const author = await authorRepository.getAuthor(id);
+    try {
+      const author = await authorRepository.getAuthor(id);
 
-    if (author instanceof NotFoundError) {
-      return author;
-    }
+      if (author instanceof NotFoundError) {
+        return author;
+      }
 
-    const deletionPromiseResults = author.booksWritten
-      .map((book) => book.id)
-      .map((id) => getBookService(repository).deleteBook(id));
+      await getBookService(repository).deleteBooks(
+        author.booksWritten.map((book) => book.id)
+      );
 
-    const deletionResults = await Promise.all(deletionPromiseResults);
-
-    const notFoundError = deletionResults.find(
-      (deletionResult) => deletionResult instanceof NotFoundError
-    );
-
-    if (notFoundError instanceof NotFoundError) {
-      return notFoundError;
-    }
-
-    const result = await authorRepository.deleteAuthor(id);
-    if (result instanceof NotFoundError) {
-      return result;
+      return authorRepository.deleteAuthor(id);
+    } catch {
+      return new NotFoundError();
     }
   }
 
@@ -60,5 +51,41 @@ export function getAuthorService(repository: ReturnType<typeof getRepository>) {
     return authorRepository.modifyAuthor(id, newAuthor);
   }
 
-  return { getAllAuthors, getAuthor, createAuthor, deleteAuthor, modifyAuthor };
+  async function removeBookIdFromAuthor(authorId: string, bookId: string) {
+    try {
+      const result = await repository
+        .getAuthorRepository()
+        .removeBookIdFromAuthor(authorId, bookId);
+
+      if (result === false) {
+        throw new Error("Unsuccessful removal");
+      }
+    } catch {
+      throw new Error("Unsuccessful removal");
+    }
+  }
+
+  async function addBookIdToAuthor(authorId: string, bookId: string) {
+    try {
+      const result = await repository
+        .getAuthorRepository()
+        .addBookIdToAuthor(authorId, bookId);
+
+      if (result === false) {
+        throw new Error("Unsuccessful insertion");
+      }
+    } catch {
+      throw new Error("Unsuccessful insertion");
+    }
+  }
+
+  return {
+    getAllAuthors,
+    getAuthor,
+    createAuthor,
+    deleteAuthor,
+    modifyAuthor,
+    addBookIdToAuthor,
+    removeBookIdFromAuthor,
+  };
 }
