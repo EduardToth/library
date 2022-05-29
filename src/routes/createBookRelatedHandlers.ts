@@ -8,6 +8,7 @@ import { createService } from "../services/createService";
 import { ConflictError } from "../exceptions/ConflictError";
 import { getBookFromDTO, mapBookToDTO } from "./dtoConversions";
 import { NotFoundError } from "../exceptions/NotFoundError";
+import { BadRequestError } from "../exceptions/BadRequestError";
 
 export function createBookRelatedHandlers(
   service: ReturnType<typeof createService>
@@ -25,7 +26,7 @@ export function createBookRelatedHandlers(
 
     const result = await service.getBookService().createBook(book);
 
-    if (result instanceof ConflictError) {
+    if (result instanceof BadRequestError) {
       res.status(StatusCodes.BAD_REQUEST).send();
     } else {
       const bookDTO = mapBookToDTO(book);

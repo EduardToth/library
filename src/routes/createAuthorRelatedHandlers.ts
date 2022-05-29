@@ -3,6 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import { Context } from "openapi-backend";
 import { v4 } from "uuid";
 import { Author } from "../domain";
+import { BadRequestError } from "../exceptions/BadRequestError";
 import { ConflictError } from "../exceptions/ConflictError";
 import { NotFoundError } from "../exceptions/NotFoundError";
 import { createService } from "../services/createService";
@@ -22,8 +23,8 @@ export function createAuthorRelatedHandlers(
 
     const result = await service.getAuthorService().createAuthor(author);
 
-    if (result instanceof ConflictError) {
-      res.status(StatusCodes.CONFLICT).send();
+    if (result instanceof BadRequestError) {
+      res.status(StatusCodes.BAD_REQUEST).send();
     } else {
       const authorDTO = mapAuthorToDTO(result);
 

@@ -1,4 +1,5 @@
 import { Book } from "../domain";
+import { BadRequestError } from "../exceptions/BadRequestError";
 import { ConflictError } from "../exceptions/ConflictError";
 import { NotFoundError } from "../exceptions/NotFoundError";
 import { getRepository } from "../repositories/getRepository";
@@ -17,7 +18,7 @@ export function getBookService(repository: ReturnType<typeof getRepository>) {
       .addBookIdToAuthor(authorId, id);
 
     if (success === false) {
-      return new ConflictError();
+      return new BadRequestError();
     }
 
     return bookRepository.createBook(book);
