@@ -40,7 +40,7 @@ export function createLibraryRelatedHandlers(
     } else {
       const libraryDTO = mapLibraryToDTO(result);
 
-      res.status(StatusCodes.CREATED).json(libraryDTO);
+      res.status(StatusCodes.OK).json(libraryDTO);
     }
   }
 
@@ -52,7 +52,7 @@ export function createLibraryRelatedHandlers(
     } else {
       const libraryDTOs = results.map((result) => mapLibraryToDTO(result));
 
-      res.status(StatusCodes.CREATED).json(libraryDTOs);
+      res.status(StatusCodes.OK).json(libraryDTOs);
     }
   }
 

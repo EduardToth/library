@@ -127,6 +127,7 @@ export function getLibraryRepository(database: typeof mongoose) {
       return new ConflictError();
     }
   }
+
   return {
     createLibrary,
     getLibrary,

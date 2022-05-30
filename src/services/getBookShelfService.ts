@@ -84,7 +84,10 @@ export function getBookShelfService(
       await getBookService(repository).deleteBooks(
         bookShelf.books.map((book) => book.id)
       );
-
+      await getLibraryService(repository).removeBookShelfIdFromLibrary(
+        bookShelf.id,
+        bookShelf.libraryId
+      );
       return bookShelfRepository.deleteBookShelf(id);
     } catch {
       return new NotFoundError();
