@@ -1,6 +1,7 @@
 import { isNil } from "lodash";
 import mongoose from "mongoose";
 import { Book } from "../domain";
+import { BadRequestError } from "../exceptions/BadRequestError";
 import { ConflictError } from "../exceptions/ConflictError";
 import { NotFoundError } from "../exceptions/NotFoundError";
 import { mapBookToDAO, mapDaoToBook } from "./daoConversions";
@@ -23,7 +24,7 @@ export function getBookRepository(database: typeof mongoose) {
     }
   }
 
-  async function createBook(book: Book): Promise<Book | ConflictError> {
+  async function createBook(book: Book): Promise<Book | BadRequestError> {
     const bookDAO = mapBookToDAO(book);
     try {
       const resultedBookDAO = await new BookModel(bookDAO).save();
@@ -32,7 +33,7 @@ export function getBookRepository(database: typeof mongoose) {
     } catch (err) {
       console.log(err);
 
-      return new ConflictError();
+      return new BadRequestError();
     }
   }
 

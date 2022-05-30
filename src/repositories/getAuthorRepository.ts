@@ -6,6 +6,7 @@ import { AuthorDAO, authorDAOSchema } from "./schemas";
 import { getBookRepository } from "./getBookRepository";
 import { NotFoundError } from "../exceptions/NotFoundError";
 import { isNil } from "lodash";
+import { BadRequestError } from "../exceptions/BadRequestError";
 export function getAuthorRepository(database: typeof mongoose) {
   const AUTHOR_ENTITY_NAME = "authors";
   const { getBook } = getBookRepository(database);
@@ -27,7 +28,9 @@ export function getAuthorRepository(database: typeof mongoose) {
     return retrievedBooks as Book[];
   }
 
-  async function createAuthor(author: Author): Promise<Author | ConflictError> {
+  async function createAuthor(
+    author: Author
+  ): Promise<Author | BadRequestError> {
     const authorDAO = mapAuthorToDAO(author);
 
     try {
@@ -38,7 +41,7 @@ export function getAuthorRepository(database: typeof mongoose) {
     } catch (err) {
       console.log(err);
 
-      return new ConflictError();
+      return new BadRequestError();
     }
   }
 
