@@ -119,8 +119,11 @@ export function getBookShelfService(
         libraryService.removeBookShelfIdFromLibrary(id, oldLibraryId),
         libraryService.addBookShelfIdToLibrary(id, bookShelf.libraryId),
       ]);
-
-      return bookShelfRepository.modifyBookShelf(id, bookShelf);
+      const newBookShelf: BookShelf = {
+        ...bookShelf,
+        books: oldBookShelf.books,
+      };
+      return bookShelfRepository.modifyBookShelf(id, newBookShelf);
     } catch {
       return new ConflictError();
     }

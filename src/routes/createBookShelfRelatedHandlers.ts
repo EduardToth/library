@@ -77,7 +77,7 @@ export function createBookShelfRelatedHandlers(
     } else {
       const bookShelfDTO = mapBookShelfToDTO(result);
 
-      res.send(StatusCodes.OK).json(bookShelfDTO);
+      res.status(StatusCodes.OK).json(bookShelfDTO);
     }
   }
 

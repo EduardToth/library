@@ -139,10 +139,9 @@ export function getBookShelfRepository(database: typeof mongoose) {
   async function modifyBookShelf(id: string, bookShelf: BookShelf) {
     try {
       const bookShelfDAO = mapBookShelfToDAO(bookShelf);
-      const result = await BookShelfModel.findByIdAndUpdate(
-        id,
-        bookShelfDAO
-      ).exec();
+      const result = await BookShelfModel.findByIdAndUpdate(id, bookShelfDAO, {
+        new: true,
+      }).exec();
 
       if (isNil(result)) {
         return new ConflictError();
