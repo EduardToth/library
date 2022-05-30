@@ -9,7 +9,7 @@ import { mapDaoToLibrary, mapLibraryToDAO } from "./daoConversions";
 import { getBookShelfRepository } from "./getBookShelfRepository";
 import { libraryDAOSchema } from "./schemas";
 
-const LIBRARY_ENTITY_NAME = "Book";
+const LIBRARY_ENTITY_NAME = "Library";
 
 export function getLibraryRepository(database: typeof mongoose) {
   const LibraryModel = database.model(LIBRARY_ENTITY_NAME, libraryDAOSchema);

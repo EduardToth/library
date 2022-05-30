@@ -15,12 +15,12 @@ export function createLibraryRelatedHandlers(
 ) {
   async function createLibrary(context: Context, res: Response) {
     const libraryContentDTO = context.request.requestBody as LibraryContentDTO;
-
     const library: Library = {
       ...libraryContentDTO,
       id: v4(),
       bookShelves: [],
     };
+
     const result = await service.getLibraryService().createLibrary(library);
 
     if (result instanceof BadRequestError) {

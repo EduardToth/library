@@ -1,23 +1,28 @@
-import { Context } from "openapi-backend";
 import { Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import { Context } from "openapi-backend";
+import { v4 } from "uuid";
+import { BadRequestError } from "../exceptions/BadRequestError";
+import { ConflictError } from "../exceptions/ConflictError";
+import { NotFoundError } from "../exceptions/NotFoundError";
+import { createService } from "../services/createService";
+import { mapBookShelfToDTO, mapBookToDTO } from "./dtoConversions";
 import {
   BookShelf,
   BookShelfContent as BookShelfContentDTO,
 } from "./generated";
-import { v4 } from "uuid";
-import { mapBookShelfToDTO } from "./dtoConversions";
-import { createService } from "../services/createService";
-import { ConflictError } from "../exceptions/ConflictError";
-import { NotFoundError } from "../exceptions/NotFoundError";
-import { BadRequestError } from "../exceptions/BadRequestError";
-import { getLibraryService } from "../services/getLibraryService";
 
 export function createBookShelfRelatedHandlers(
   service: ReturnType<typeof createService>
 ) {
   async function getAllBookShelves(_context: Context, res: Response) {
-    res.status(StatusCodes.OK).json([]);
+    const result = await service.getBookShelfService().getAllBookShelves();
+
+    if (result instanceof NotFoundError) {
+      res.status(StatusCodes.NOT_FOUND).send();
+    } else {
+      res.status(StatusCodes.OK).json(result.map(mapBookShelfToDTO));
+    }
   }
 
   async function createBookShelf(context: Context, res: Response) {
@@ -43,15 +48,15 @@ export function createBookShelfRelatedHandlers(
   async function getBookShelf(context: Context, res: Response) {
     const id = context.request.params.id as string;
 
-    const bookShelf: BookShelf = {
-      books: [],
-      id,
-      libraryId: v4(),
-    };
+    const result = await service.getBookShelfService().getBookShelf(id);
 
-    const bookShelfDTO = mapBookShelfToDTO(bookShelf);
+    if (result instanceof NotFoundError) {
+      res.status(StatusCodes.NOT_FOUND).send();
+    } else {
+      const bookShelfDTO = mapBookShelfToDTO(result);
 
-    res.status(StatusCodes.OK).json(bookShelfDTO);
+      res.status(StatusCodes.OK).json(bookShelfDTO);
+    }
   }
 
   async function modifyBookShelf(context: Context, res: Response) {

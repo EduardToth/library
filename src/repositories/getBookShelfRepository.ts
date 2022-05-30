@@ -101,7 +101,7 @@ export function getBookShelfRepository(database: typeof mongoose) {
   ) {
     return BookShelfModel.updateOne(
       { _id: bookShelfId },
-      { $pull: { bookShelfIds: bookId } }
+      { $pull: { bookIds: bookId } }
     )
       .exec()
       .then((result) => result.modifiedCount === 1)
