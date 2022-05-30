@@ -29,7 +29,7 @@ export function createLibraryRelatedHandlers() {
     };
 
     const libraryDTO = mapLibraryToDTO(library);
-    res.status(StatusCodes.CREATED).json(libraryDTO);
+    res.status(StatusCodes.OK).json(libraryDTO);
   }
 
   async function getAllLibraries(_context: Context, res: Response) {
