@@ -15,6 +15,7 @@ export function createLibraryRelatedHandlers() {
       bookShelves: [],
       id: v4(),
     };
+
     const libraryDTO = mapLibraryToDTO(library);
     res.status(StatusCodes.CREATED).json(libraryDTO);
   }

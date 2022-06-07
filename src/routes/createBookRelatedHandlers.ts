@@ -10,8 +10,9 @@ import { getBookFromDTO, mapBookToDTO } from "./dtoConversions";
 import { NotFoundError } from "../exceptions/NotFoundError";
 import { BadRequestError } from "../exceptions/BadRequestError";
 
+type SubServiceTypes = ReturnType<typeof createService>;
 export function createBookRelatedHandlers(
-  service: ReturnType<typeof createService>
+  bookService: ReturnType<SubServiceTypes["getBookService"]>
 ) {
   async function createBook(context: Context, res: Response) {
     const bookContentDTO = context.request.requestBody as BookContentDTO;
@@ -24,7 +25,7 @@ export function createBookRelatedHandlers(
       id: v4(),
     };
 
-    const result = await service.getBookService().createBook(book);
+    const result = await bookService.createBook(book);
 
     if (result instanceof BadRequestError) {
       res.status(StatusCodes.BAD_REQUEST).send();
@@ -36,7 +37,7 @@ export function createBookRelatedHandlers(
   }
 
   async function getAllBooks(_context: Context, res: Response) {
-    const result = await service.getBookService().getAllBooks();
+    const result = await bookService.getAllBooks();
 
     if (result instanceof NotFoundError) {
       res.status(StatusCodes.OK).send();
@@ -49,7 +50,7 @@ export function createBookRelatedHandlers(
 
   async function getBook(context: Context, res: Response) {
     const id = context.request.params.id as string;
-    const result = await service.getBookService().getBook(id);
+    const result = await bookService.getBook(id);
 
     if (result instanceof NotFoundError) {
       res.status(StatusCodes.NOT_FOUND).send();
@@ -64,7 +65,7 @@ export function createBookRelatedHandlers(
     const id = context.request.params.id as string;
     // delete the reference to the book entity from the corresponding author entity
     // delete the reference to the book entity from the corresponding bookshelf entity
-    const result = await service.getBookService().deleteBook(id);
+    const result = await bookService.deleteBook(id);
 
     if (result instanceof NotFoundError) {
       res.status(StatusCodes.NOT_FOUND).send();
@@ -77,7 +78,7 @@ export function createBookRelatedHandlers(
     const id = context.request.params.id as string;
     const bookContentDTO = context.request.requestBody as BookContentDTO;
     const book = getBookFromDTO({ ...bookContentDTO, id });
-    const result = await service.getBookService().updateBook(id, book);
+    const result = await bookService.updateBook(id, book);
 
     if (result instanceof ConflictError) {
       res.status(StatusCodes.CONFLICT).send();

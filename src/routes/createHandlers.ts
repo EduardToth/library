@@ -8,8 +8,8 @@ import { createLibraryRelatedHandlers } from "./createLibraryRelatedHandlers";
 export function createHandlers(service: ReturnType<typeof createService>) {
   return {
     getHelloWorldMessage,
-    ...createBookRelatedHandlers(service),
-    ...createAuthorRelatedHandlers(service),
+    ...createBookRelatedHandlers(service.getBookService()),
+    ...createAuthorRelatedHandlers(service.getAuthorService()),
     ...createBookShelfRelatedHandlers(),
     ...createLibraryRelatedHandlers(),
   };
